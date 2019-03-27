@@ -18,6 +18,8 @@ default:
 	rsync -atP . ${SERVER}:~/mirDNN/ --exclude '__pycache__' --exclude '*.swp'
 	ssh -t ${SERVER} 'cd mirDNN; make clear; make run'
 	rsync -atP ${SERVER}:~/mirDNN/results/ ./results
+	rsync -atP ${SERVER}:~/mirDNN/logfiles/ ./logfiles
+	rsync -atP ${SERVER}:~/mirDNN/models/ ./models
 	touch ./results/*
 
 clear:
