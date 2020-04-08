@@ -4,11 +4,15 @@ import time
 import torch as tr
 import numpy as np
 import random as rn
-
-from src.trainer import Trainer
-from src.model import CNN
+import torch.utils.data as dt
+from sklearn.metrics import precision_recall_curve, auc
+from src.fold_dataset import FoldDataset
+from src.model import mirDNN
 from src.parameters import ParameterParser
+from src.sampler import ImbalancedDatasetSampler
 from src.logger import Logger
+
+tr.multiprocessing.set_sharing_strategy('file_system')
 
 def main(argv):
     pp = ParameterParser(argv)
@@ -23,24 +27,74 @@ def main(argv):
         else:
             tr.backends.cudnn.deterministic = False
             tr.backends.cudnn.benchmark = True
-    trainer = Trainer(pp)
-    cae = CNN(pp)
-    cae.train()
+
+    dataset = FoldDataset(pp.input_files, pp.seq_len)
+    valid_size = int(pp.valid_prop * len(dataset))
+    train, valid = dt.random_split(dataset, (len(dataset)-valid_size, valid_size))
+
+    train_loader = None
+    if pp.upsample:
+        train_sampler = ImbalancedDatasetSampler(train,
+                                                 max_imbalance = 1.0,
+                                                 num_samples = 8 * pp.batch_size)
+
+        train_loader = dt.DataLoader(train,
+                                     batch_size=pp.batch_size,
+                                     shuffle=True,
+                                     sampler=train_sampler,
+                                     pin_memory=True,
+                                     num_workers = 2)
+    else:
+        train_loader = dt.DataLoader(train,
+                                     batch_size=pp.batch_size,
+                                     shuffle=True,
+                                     pin_memory=True,
+                                     num_workers = 2)
+
+    valid_loader = dt.DataLoader(valid,
+                                 batch_size=pp.batch_size,
+                                 pin_memory=True,
+                                 num_workers=2)
+
+    model = mirDNN(pp)
+    model.train()
     log = Logger(pp.logfile)
 
     if not pp.model_file is None and os.path.isfile(pp.model_file):
-        cae.load_state_dict(tr.load(pp.model_file, map_location=lambda storage, loc: storage))
+        model.load(pp.model_file)
 
-    log.write('nbatch\ttrainL\tvalidL\telapsed\tthroughput\n')
-    tstart = time.time()
-    while trainer.nbatch < pp.max_nbatch:
-        trainer.train(cae)
-        elapsed = time.time()-tstart
-        throughput = sum(pp.batch_sizes) / elapsed / 1000
-        log.write('%d\t%.3f\t%.3f\t%.3f\t%.3f\n' %
-              (trainer.nbatch, trainer.train_loss, trainer.valid_loss, elapsed, throughput))
-        tstart = time.time()
-        if trainer.finish: break
+    log.write('epoch\ttrainLoss\tvalidAUC\tlast_imp\n')
+    epoch = 0
+    train_loss = 100
+    valid_auc = 0
+    best_valid_auc = 0
+    last_improvement = 0
+    while last_improvement < pp.early_stop:
+        nbatch = 0
+        for x, v, y in train_loader:
+            new_loss = model.train_step(x, v, y)
+            train_loss = 0.99 * train_loss + 0.01 * new_loss
+            nbatch += 1
+            if nbatch >= 1000: continue
+
+        preds, labels = tr.Tensor([]), tr.Tensor([])
+        for x, v, y in valid_loader:
+            z = model(x, v).cpu().detach()
+            preds = tr.cat([preds, z.squeeze()])
+            labels = tr.cat([labels, y.squeeze()])
+        pr, rc, _ = precision_recall_curve(labels, preds)
+        valid_auc = 10 * auc(rc, pr) + 0.9 * valid_auc
+
+        model.lr_scheduler.step(valid_auc)
+        last_improvement += 1
+        if valid_auc > best_valid_auc:
+            best_valid_auc = valid_auc
+            last_improvement = 0
+            model.save(pp.model_file)
+
+        log.write('%d\t%.4f\t%.4f\t%d\n' %
+                (epoch, train_loss, valid_auc, last_improvement))
+        epoch += 1
     log.close()
 
 if __name__ == "__main__":

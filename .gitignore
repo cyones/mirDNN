@@ -1,6 +1,9 @@
 *.swp
 *.swo
-datasets/*
-sequences/*
+datasets/
+sequences/
+predictions/
+results/
+logfiles/
 __pycache__
 
