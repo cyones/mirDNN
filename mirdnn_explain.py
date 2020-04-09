@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 import os.path
 import torch as tr
