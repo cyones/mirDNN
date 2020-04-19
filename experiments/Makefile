@@ -49,8 +49,9 @@ predictions/mirDNN-%-pos.csv predictions/mirDNN-%-neg.csv : \
 		-m models/$*.pmt -d $(PYTORCH_DEV) -s 160
 
 results/PRROC-%.pdf: \
-	predictions/mirDNN-$*-neg.csv predictions/mirDNN-$*-pos.csv
+	predictions/mirDNN-%-neg.csv predictions/mirDNN-%-pos.csv
 	./utils/PRROC.py $*
+
 results/barplot.pdf: \
 	predictions/mirDNN-ath-neg.csv predictions/mirDNN-ath-pos.csv \
 	predictions/mirDNN-cel-neg.csv predictions/mirDNN-cel-pos.csv \
