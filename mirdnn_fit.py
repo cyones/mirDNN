@@ -86,7 +86,6 @@ def main(argv):
         pr, rc, _ = precision_recall_curve(labels, preds)
         valid_auc = 10 * auc(rc, pr) + 0.9 * valid_auc
 
-        model.lr_scheduler.step(valid_auc)
         last_improvement += 1
         if valid_auc > best_valid_auc:
             best_valid_auc = valid_auc

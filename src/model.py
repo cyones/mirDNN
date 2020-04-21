@@ -2,7 +2,6 @@ import torch as tr
 import torch.nn as nn
 import math as mt
 import numpy as np
-from torch.optim.lr_scheduler import ReduceLROnPlateau
 from src.embedding import NucleotideEmbedding, in_channels
 from src.focal_loss import FocalLoss
 from src.resnet import ResNet
