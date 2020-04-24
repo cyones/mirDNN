@@ -3,6 +3,7 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) < 2)
 	stop("2 arguments needed")
 
+install.package("seqinr")
 suppressPackageStartupMessages(library(seqinr))
 
 aux = tempfile()

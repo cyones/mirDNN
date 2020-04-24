@@ -3,7 +3,8 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) != 4)
 	stop("4 arguments needed")
 
-library(seqinr)
+install.package("seqinr")
+suppressPackageStartupMessages(library(seqinr))
 
 set.seed(as.integer(args[4]))
 fss = read.fasta(args[3], as.string=T)
