@@ -49,8 +49,6 @@ class mirDNN(nn.Module):
             self.loss_function = nn.BCELoss()
         self.to(device = self.device)
         self.optimizer = RAdam(self.parameters(), lr=5e-3, weight_decay=1e-5)
-        self.lr_scheduler = ReduceLROnPlateau(self.optimizer, mode='max', factor=0.5,
-                                              patience=100, min_lr=1e-6, eps=1e-9)
 
     def forward(self, x, v):
         x = x.to(device = self.device)
