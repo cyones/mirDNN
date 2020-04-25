@@ -3,8 +3,11 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) != 3)
 	stop("3 arguments needed")
 
-install.package("seqinr")
-suppressPackageStartupMessages(library(seqinr))
+if(!require(seqinr)) {
+	install.packages("seqinr", lib=.libPaths()[1],
+			 contrib="https://mirror.las.iastate.edu/CRAN/src/contrib")
+	suppressPackageStartupMessages(library(seqinr))
+}
 
 fss = read.fasta(args[2], as.string=T)
 
