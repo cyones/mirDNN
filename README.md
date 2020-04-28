@@ -78,7 +78,7 @@ To reproduce the experiments, [R](https://www.r-project.org/) and [BLAST](https:
 
 ```bash
 sudo apt-get update
-sudo apt-get instal r-base ncbi-blast+
+sudo apt-get install r-base ncbi-blast+
 ```
 
 All the experiments presented in the paper can be easily reproduced using the Makefile inside the folder [experiments](./experiments).  For example, to generate the PRROC curve obtained in *Caenorhabditis elegans*, run:
