@@ -20,6 +20,7 @@ To download from GitHub:
 ```bash
 git clone --recurse-submodules https://github.com/cyones/mirDNN.git
 ```
+
 After downloading the package (from GitHub or SourceForge), install the dependencies:
 
 ```bash
@@ -73,7 +74,12 @@ python3 mirddn_fit.py -h
 
 ## Reproduce experiments
 
-To reproduce the experiments, [R](https://www.r-project.org/) must be installed.
+To reproduce the experiments, [R](https://www.r-project.org/) and [BLAST](https://blast.ncbi.nlm.nih.gov) must be installed. This can be done in Ubuntu (and derivated distributions) with the followings commands:
+
+```bash
+sudo apt-get update
+sudo apt-get install r-base ncbi-blast+
+```
 
 All the experiments presented in the paper can be easily reproduced using the Makefile inside the folder [experiments](./experiments).  For example, to generate the PRROC curve obtained in *Caenorhabditis elegans*, run:
 
