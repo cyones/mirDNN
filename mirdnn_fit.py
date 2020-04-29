@@ -13,7 +13,6 @@ from src.parameters import ParameterParser
 from src.sampler import ImbalancedDatasetSampler
 from src.logger import Logger
 
-tr.multiprocessing.set_sharing_strategy('file_system')
 
 def main(argv):
     pp = ParameterParser(argv)
@@ -43,19 +42,16 @@ def main(argv):
                                      batch_size=pp.batch_size,
                                      shuffle=True,
                                      sampler=train_sampler,
-                                     pin_memory=True,
-                                     num_workers = 2)
+                                     pin_memory=True)
     else:
         train_loader = dt.DataLoader(train,
                                      batch_size=pp.batch_size,
                                      shuffle=True,
-                                     pin_memory=True,
-                                     num_workers = 2)
+                                     pin_memory=True)
 
     valid_loader = dt.DataLoader(valid,
                                  batch_size=pp.batch_size,
-                                 pin_memory=True,
-                                 num_workers=2)
+                                 pin_memory=True)
 
     model = mirDNN(pp)
     model.train()
