@@ -3,7 +3,7 @@
 MirDNN is a novel deep learning method specifically designed for pre-miRNA prediction in genome-wide data. The model is a convolutional deep residual neural network that can automatically learn suitable features from the raw data, without manual feature engineering.
 This model is capable of successfully learn the intrinsic structural characteristics of precursors of miRNAs, as well as their context in a sequence. The proposal has been tested with several genomes of animals and plants and compared with state-of-the-art algorithms.
 
-MirDNN is described with detail in "High precision in microRNA prediction: a novel genome-wide approach based on convolutional deep residual networks," by C. Yones, L.A. Bugnon, J. Raad, D.H. Milone and G. Stegmayer (under review in a refereed journal).
+MirDNN is described with detail in "High precision in microRNA prediction: a novel genome-wide approach based on convolutional deep residual networks," by C. Yones, J.Raad, L.A. Bugnon, D.H. Milone and G. Stegmayer (under review in a refereed journal).
 
 > Contact: [Cristian Yones](mailto:cyones@sinc.unl.edu.ar), [sinc(i)](http://sinc.unl.edu.ar)
 
@@ -74,14 +74,14 @@ python3 mirddn_fit.py -h
 
 ## Reproduce experiments
 
-To reproduce the experiments, [R](https://www.r-project.org/) and [BLAST](https://blast.ncbi.nlm.nih.gov) must be installed. This can be done in Ubuntu (and derivated distributions) with the followings commands:
+To reproduce the experiments, [R](https://www.r-project.org/) and [BLAST](https://blast.ncbi.nlm.nih.gov) must be installed. This can be done in Ubuntu (and derived distributions) with the followings commands:
 
 ```bash
 sudo apt-get update
 sudo apt-get install r-base ncbi-blast+
 ```
 
-All the experiments presented in the paper can be easily reproduced using the Makefile inside the folder [experiments](./experiments).  For example, to generate the PRROC curve obtained in *Caenorhabditis elegans*, run:
+Training with the paper datasets is very computationally expensive, so it is necessary to have a GPU to do it in a reasonable time. All the experiments presented in the paper can be easily reproduced using the Makefile inside the folder [experiments](./experiments).  For example, to generate the PRROC curve obtained in *Caenorhabditis elegans*, run:
 
 ```bash
 cd experiments
