@@ -25,15 +25,17 @@ class FoldDataset(Dataset):
         self.mfe = tr.Tensor(total_seqs, 1)
         self.label = tr.Tensor(total_seqs, 1)
 
+        i=0
         for label, filename in enumerate(input_files):
             with open(filename, "r") as handle:
-                for i, record in enumerate(SeqIO.parse(handle, "fasta")):
+                for record in SeqIO.parse(handle, "fasta"):
                     self.name[i] = record.id
 
                     tns, mfe = self.record2tensor(record)
                     self.sequence[i] = tns
                     self.mfe[i] = mfe
                     self.label[i] = label
+                    i+=1
 
 
     def record2tensor(self, record):
