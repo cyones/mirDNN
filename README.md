@@ -3,7 +3,7 @@
 MirDNN is a novel deep learning method specifically designed for pre-miRNA prediction in genome-wide data. The model is a convolutional deep residual neural network that can automatically learn suitable features from the raw data, without manual feature engineering.
 This model is capable of successfully learn the intrinsic structural characteristics of precursors of miRNAs, as well as their context in a sequence. The proposal has been tested with several genomes of animals and plants and compared with state-of-the-art algorithms.
 
-MirDNN is described with detail in "High precision in microRNA prediction: a novel genome-wide approach based on convolutional deep residual networks," by C. Yones, J.Raad, L.A. Bugnon, D.H. Milone and G. Stegmayer (under review in a refereed journal).
+MirDNN is described with detail in "High precision in microRNA prediction: a novel genome-wide approach based on convolutional deep residual networks," by C. Yones, J.Raad, L.A. Bugnon, D.H. Milone and G. Stegmayer (under review in a refereed journal, pre-print [here](https://www.biorxiv.org/content/10.1101/2020.10.23.352179v1)).
 
 > Contact: [Cristian Yones](mailto:cyones@sinc.unl.edu.ar), [sinc(i)](http://sinc.unl.edu.ar)
 
