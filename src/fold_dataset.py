@@ -31,7 +31,10 @@ class FoldDataset(Dataset):
                 for record in SeqIO.parse(handle, "fasta"):
                     self.name[i] = record.id
 
-                    tns, mfe = self.record2tensor(record)
+                    try:
+                        tns, mfe = self.record2tensor(record)
+                    except Exception as exc:
+                        print(f"Invalid record ignored:\n{record}")
                     self.sequence[i] = tns
                     self.mfe[i] = mfe
                     self.label[i] = label
